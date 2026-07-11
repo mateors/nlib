@@ -231,8 +231,8 @@
     is: function (sel) {
       return this.elm.matches(sel);
     },
-    toggle: function (token) {
-      this.elm.classList.toggle(token);
+    toggle: function (token, force) {
+      this.elm.classList.toggle(token, force);
       return this;
     },
     contains: function (cls) {
