@@ -196,6 +196,10 @@
       this.elm = this.elm.querySelectorAll(sel); // NodeList
       return this;
     },
+    without: function (selector) {
+      this.elm = Array.from(this.elm).filter(el => !el.querySelector(selector));
+      return this;
+    },
     isExist: function () {
       if (this.elm == null) return false;
       return this.elm.isConnected;
@@ -223,7 +227,10 @@
       return window.getComputedStyle(this.elm).display === "none";
     },
     nitem: function (index) {
-      if (this.elm instanceof NodeList) return this.elm[index];
+      if (this.elm instanceof NodeList || Array.isArray(this.elm)) {
+        return this.elm[index];
+      }
+      return this.elm; // fallback if it's a single element
     },
     matches: function (sel) {
       return this.elm.matches(sel);
@@ -242,7 +249,13 @@
       return this.elm.hasAttribute(attrName);
     },
     hasClass: function (cls) {
-      return this.elm.classList.contains(cls);
+      if (this.elm instanceof Element) {
+        return this.elm.classList.contains(cls);
+      }
+      if (this.elm instanceof NodeList || Array.isArray(this.elm)) {
+        return Array.from(this.elm).some(el => el.classList.contains(cls));
+      }
+      return false;
     },
     classList: function () {
       return this.elm.classList;
