@@ -28,8 +28,10 @@
       return this.elm;
     },
     datas: function (key) {
-      if (typeof key === "undefined") return this.elm.dataset;
-      return this.elm.dataset[key];
+      if (this.elm instanceof Element) {
+        return typeof key === "undefined" ? this.elm.dataset : this.elm.dataset[key];
+      }
+      return null;
     },
     html: function (val) {
       if (typeof val === "undefined") return this.elm.innerHTML;
@@ -228,9 +230,9 @@
     },
     nitem: function (index) {
       if (this.elm instanceof NodeList || Array.isArray(this.elm)) {
-        return this.elm[index];
+        this.elm = this.elm[index];
       }
-      return this.elm; // fallback if it's a single element
+      return this;
     },
     matches: function (sel) {
       return this.elm.matches(sel);
